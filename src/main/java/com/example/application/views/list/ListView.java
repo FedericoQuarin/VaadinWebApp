@@ -1,8 +1,8 @@
 package com.example.application.views.list;
 
-import com.example.application.model.Company;
-import com.example.application.model.Contact;
-import com.example.application.model.Status;
+import com.example.application.data.model.Company;
+import com.example.application.data.model.Contact;
+import com.example.application.data.model.Status;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
