@@ -1,6 +1,12 @@
 package com.example.application.model;
 
-public class Status {
+import jakarta.persistence.Entity;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+public class Status extends AbstractEntity {
+
+    @NotNull
     private String name;
 
     public Status(String name) {
