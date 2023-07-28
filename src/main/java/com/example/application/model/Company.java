@@ -1,15 +1,25 @@
 package com.example.application.model;
 
+import jakarta.annotation.Nullable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Company {
-    private String name;
-    private List<Contact> empleados = new ArrayList<>();
+@Entity
+public class Company extends AbstractEntity {
+    @NotEmpty
+    private String name = "";
 
-    public Company(String name, List<Contact> empleados) {
+    @OneToMany(mappedBy = "company")
+    @Nullable
+    private List<Contact> employees;
+
+    public Company(String name, List<Contact> employees) {
         this.name = name;
-        this.empleados = empleados;
+        this.employees = employees;
     }
 
     public String getName() {
@@ -20,12 +30,12 @@ public class Company {
         this.name = name;
     }
 
-    public List<Contact> getEmpleados() {
-        return empleados;
+    public List<Contact> getEmployees() {
+        return employees;
     }
 
-    public void setEmpleados(List<Contact> empleados) {
-        this.empleados = empleados;
+    public void setEmployees(List<Contact> employees) {
+        this.employees = employees;
     }
 
 }

@@ -94,7 +94,7 @@ public class ListView extends VerticalLayout {
                 "valenreynoso@gmail.com",
                 statuses.get(0),
                 companies.get(0));
-        companies.get(0).getEmpleados().add(contact1);
+        companies.get(0).getEmployees().add(contact1);
         contactList.add(contact1);
 
         Contact contact2 = new Contact(
@@ -103,7 +103,7 @@ public class ListView extends VerticalLayout {
                 "federicoquarin@gmail.com",
                 statuses.get(1),
                 companies.get(0));
-        companies.get(0).getEmpleados().add(contact2);
+        companies.get(0).getEmployees().add(contact2);
         contactList.add(contact2);
 
         return contactList;

@@ -1,10 +1,31 @@
 package com.example.application.model;
 
-public class Contact {
-    private String firstName;
-    private String lastName;
-    private String email;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+public class Contact extends AbstractEntity {
+    @NotEmpty
+    private String firstName = "";
+
+    @NotEmpty
+    private String lastName = "";
+
+    @NotNull
+    private String email = "";
+
+    @NotNull
+    @ManyToOne
     private Status status;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    @JsonIgnoreProperties({"employees"})
     private Company company;
 
     public Contact(String firstName, String lastName, String email, Status status, Company company) {
