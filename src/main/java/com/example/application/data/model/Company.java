@@ -1,11 +1,10 @@
-package com.example.application.model;
+package com.example.application.data.model;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotEmpty;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
