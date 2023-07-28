@@ -27,5 +27,6 @@ public class Company {
     public void setEmpleados(List<Contact> empleados) {
         this.empleados = empleados;
     }
+
 }
 
