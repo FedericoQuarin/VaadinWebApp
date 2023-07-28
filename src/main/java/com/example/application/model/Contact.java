@@ -1,13 +1,13 @@
 package com.example.application.model;
 
-public class Person {
+public class Contact {
     private String firstName;
     private String lastName;
     private String email;
-    private String status;
-    private String company;
+    private Status status;
+    private Company company;
 
-    public Person(String firstName, String lastName, String email, String status, String company) {
+    public Contact(String firstName, String lastName, String email, Status status, Company company) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -39,19 +39,19 @@ public class Person {
         this.email = email;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
-    public String getCompany() {
+    public Company getCompany() {
         return company;
     }
 
-    public void setCompany(String company) {
+    public void setCompany(Company company) {
         this.company = company;
     }
 }
