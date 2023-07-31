@@ -5,13 +5,18 @@ import com.example.application.data.model.Company;
 import com.example.application.data.model.Contact;
 import com.example.application.data.model.Status;
 import com.example.application.data.repos.ContactRepository;
+import com.example.application.data.services.CrmService;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -26,34 +31,37 @@ import java.util.stream.Collectors;
 public class ListView extends VerticalLayout {
     private HorizontalLayout toolbar;
     private Grid<Contact> grid;
-    private FormLayout form;
+    private ContactForm form;
 
-    private ContactRepository contactRepository;
+    private TextField filterField;
 
-    /*private static List<Company> companies = Arrays.asList(
-            new Company("Flowing Code SA", new ArrayList<>()),
-            new Company("Playcom SA", new ArrayList<>()));
-    private static List<Status> statuses = Arrays.asList(
-            new Status("Contacted"),
-            new Status("Email sent")
-    );*/
+    private final CrmService service;
 
-    public ListView(ContactRepository contactRepository) {
-        this.contactRepository = contactRepository;
+    public ListView(CrmService service) {
+        this.service = service;
 
         configureToobar();
-
         add(toolbar, configureContent());
 
+        updateList();
+
+        grid.addSelectionListener(e -> {
+            if (e.isFromClient()) {
+                form.setContact(grid.asSingleSelect().getValue());
+            }
+        });
     }
 
     private void configureToobar() {
         toolbar = new HorizontalLayout();
 
-        TextField filterField = new TextField();
+        filterField = new TextField();
         filterField.setValueChangeMode(ValueChangeMode.LAZY);
         filterField.setPlaceholder("Filter by name...");
         filterField.setClearButtonVisible(true);
+        filterField.addValueChangeListener(e -> {
+            if (e.isFromClient()) updateList();
+        });
 
         Button addContactButton = new Button("Add Contact");
 
@@ -65,8 +73,6 @@ public class ListView extends VerticalLayout {
 
         configureGrid();
         configureForm();
-
-        grid.setItems(contactList());
 
         layout.add(grid, form);
         layout.setFlexGrow(2, grid);
@@ -89,33 +95,32 @@ public class ListView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new ContactForm(new ArrayList<>(), new ArrayList<>());
+        form = new ContactForm(
+                service.findAllCompanies(),
+                service.findAllStatus(),
+                new ContactForm.ContactFormActionsHandler() {
+                    @Override
+                    public void saveContact(Contact contact) {
+                        service.saveContact(contact);
+                        updateList();
+                        Notification notification = Notification.show(
+                                "Contact saved succesfully!",
+                                5000,
+                                Notification.Position.BOTTOM_START);
+                        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                        notification.open();
+                    }
+
+                    @Override
+                    public void deleteContact(Contact contact) {
+                        service.deleteContact(contact);
+                        updateList();
+                    }
+                });
         form.setWidth("30em");
     }
 
-    public static List<Contact> contactList() {
-        List<Contact> contactList = new ArrayList<>();
-
-        /*Contact contact1 = new Contact(
-                "Valentin",
-                "Reynoso",
-                "valenreynoso@gmail.com",
-                statuses.get(0),
-                companies.get(0));
-        companies.get(0).getEmployees().add(contact1);
-        contactList.add(contact1);
-
-        Contact contact2 = new Contact(
-                "Federico",
-                "Quarin",
-                "federicoquarin@gmail.com",
-                statuses.get(1),
-                companies.get(0));
-        companies.get(0).getEmployees().add(contact2);
-        contactList.add(contact2);*/
-
-        return contactList;
+    private void updateList() {
+        grid.setItems(service.findAllContacts(filterField.getValue()));
     }
-
-
 }
