@@ -36,6 +36,15 @@ public class Contact extends AbstractEntity {
         this.company = company;
     }
 
+    public Contact(Contact contact) {
+        this.firstName = contact.getFirstName();
+        this.lastName = contact.getLastName();
+        this.email = contact.getEmail();
+        this.status = contact.getStatus();
+        this.company = contact.getCompany();
+        super.setId(contact.getId());
+    }
+
     public Contact() {}
 
     public String getFirstName() {

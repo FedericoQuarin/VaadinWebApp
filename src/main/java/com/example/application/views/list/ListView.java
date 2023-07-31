@@ -9,6 +9,8 @@ import com.example.application.data.services.CrmService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
@@ -28,7 +30,7 @@ import java.util.stream.Collectors;
 
 @PageTitle("Contacts")
 @Route(value = "", layout = MainLayout.class)
-public class ListView extends VerticalLayout {
+public class ListView extends VerticalLayout implements ContactForm.ContactFormActionsHandler {
     private HorizontalLayout toolbar;
     private Grid<Contact> grid;
     private ContactForm form;
@@ -98,29 +100,45 @@ public class ListView extends VerticalLayout {
         form = new ContactForm(
                 service.findAllCompanies(),
                 service.findAllStatus(),
-                new ContactForm.ContactFormActionsHandler() {
-                    @Override
-                    public void saveContact(Contact contact) {
-                        service.saveContact(contact);
-                        updateList();
-                        Notification notification = Notification.show(
-                                "Contact saved succesfully!",
-                                5000,
-                                Notification.Position.BOTTOM_START);
-                        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                        notification.open();
-                    }
-
-                    @Override
-                    public void deleteContact(Contact contact) {
-                        service.deleteContact(contact);
-                        updateList();
-                    }
-                });
+                this);
         form.setWidth("30em");
     }
 
     private void updateList() {
         grid.setItems(service.findAllContacts(filterField.getValue()));
+    }
+
+    @Override
+    public void saveContact(Contact contact) {
+        service.saveContact(contact);
+        updateList();
+        Notification notification = Notification.show(
+                "Contact saved succesfully!",
+                5000,
+                Notification.Position.BOTTOM_START);
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        notification.open();
+    }
+
+    @Override
+    public void deleteContact(Contact contact) {
+        ConfirmDialog dialog = new ConfirmDialog();
+        dialog.setHeader("Confirm deletion");
+        dialog.setText("Are you sure you want to delete the contact?");
+        dialog.setConfirmButton("Yes", e -> {
+            service.deleteContact(contact);
+            updateList();
+
+            Notification notification = Notification.show(
+                    "Contact deleted succesfully!",
+                    5000,
+                    Notification.Position.BOTTOM_START);
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            notification.open();
+        });
+        dialog.setCancelButton("No", e-> {
+            dialog.close();
+        });
+        dialog.open();
     }
 }
