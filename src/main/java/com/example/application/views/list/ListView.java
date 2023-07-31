@@ -1,8 +1,10 @@
 package com.example.application.views.list;
 
+import com.example.application.data.model.AbstractEntity;
 import com.example.application.data.model.Company;
 import com.example.application.data.model.Contact;
 import com.example.application.data.model.Status;
+import com.example.application.data.repos.ContactRepository;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -17,6 +19,7 @@ import com.vaadin.flow.router.Route;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @PageTitle("Contacts")
 @Route(value = "", layout = MainLayout.class)
@@ -25,18 +28,23 @@ public class ListView extends VerticalLayout {
     private Grid<Contact> grid;
     private FormLayout form;
 
-    private static List<Company> companies = Arrays.asList(
+    private ContactRepository contactRepository;
+
+    /*private static List<Company> companies = Arrays.asList(
             new Company("Flowing Code SA", new ArrayList<>()),
             new Company("Playcom SA", new ArrayList<>()));
     private static List<Status> statuses = Arrays.asList(
             new Status("Contacted"),
             new Status("Email sent")
-    );
+    );*/
 
-    public ListView() {
+    public ListView(ContactRepository contactRepository) {
+        this.contactRepository = contactRepository;
+
         configureToobar();
 
         add(toolbar, configureContent());
+
     }
 
     private void configureToobar() {
@@ -81,14 +89,14 @@ public class ListView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new ContactForm(companies, statuses);
+        form = new ContactForm(new ArrayList<>(), new ArrayList<>());
         form.setWidth("30em");
     }
 
     public static List<Contact> contactList() {
         List<Contact> contactList = new ArrayList<>();
 
-        Contact contact1 = new Contact(
+        /*Contact contact1 = new Contact(
                 "Valentin",
                 "Reynoso",
                 "valenreynoso@gmail.com",
@@ -104,7 +112,7 @@ public class ListView extends VerticalLayout {
                 statuses.get(1),
                 companies.get(0));
         companies.get(0).getEmployees().add(contact2);
-        contactList.add(contact2);
+        contactList.add(contact2);*/
 
         return contactList;
     }

@@ -36,6 +36,8 @@ public class Contact extends AbstractEntity {
         this.company = company;
     }
 
+    public Contact() {}
+
     public String getFirstName() {
         return firstName;
     }
@@ -74,5 +76,14 @@ public class Contact extends AbstractEntity {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
