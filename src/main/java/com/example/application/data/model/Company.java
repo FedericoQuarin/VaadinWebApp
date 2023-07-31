@@ -21,6 +21,8 @@ public class Company extends AbstractEntity {
         this.employees = employees;
     }
 
+    public Company() {}
+
     public String getName() {
         return name;
     }
