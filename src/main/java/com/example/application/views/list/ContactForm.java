@@ -3,7 +3,6 @@ package com.example.application.views.list;
 import com.example.application.data.model.Company;
 import com.example.application.data.model.Contact;
 import com.example.application.data.model.Status;
-import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -12,11 +11,13 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
 
 import java.util.List;
 
 public class ContactForm extends FormLayout {
     private final Binder<Contact> binder = new BeanValidationBinder<>(Contact.class);
+    private Contact contact;
 
     TextField firstName = new TextField("First Name");
     TextField lastName = new TextField("Last Name");
@@ -25,6 +26,8 @@ public class ContactForm extends FormLayout {
     ComboBox<Company> company;
 
     private final Button saveButton;
+    private final Button deleteButton;
+    private final Button cancelButton;
 
     public ContactForm(List<Company> companies, List<Status> statuses, ContactFormActionsHandler actionsHandler) {
         status = new ComboBox<>("Status", statuses);
@@ -37,18 +40,28 @@ public class ContactForm extends FormLayout {
 
         saveButton = new Button("Save");
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        saveButton.setEnabled(false);
         saveButton.addClickListener(e -> {
-            if (binder.getBean() != null) {
-                actionsHandler.saveContact(binder.getBean());
+            try {
+                binder.writeBean(contact);
+                actionsHandler.saveContact(contact);
                 saveButton.setEnabled(false);
+            } catch (ValidationException exc) {
+                exc.printStackTrace();
             }
         });
 
-        Button deleteButton = new Button("Delete");
-        Button canceButton = new Button("Cancel");
-        canceButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        deleteButton = new Button("Delete");
+        deleteButton.addClickListener(e -> {
+            actionsHandler.deleteContact(contact);
+        });
 
-        buttonsLayout.add(saveButton, deleteButton, canceButton);
+        cancelButton = new Button("Cancel");
+        cancelButton.setEnabled(false);
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        cancelButton.addClickListener(e -> binder.readBean(contact));
+
+        buttonsLayout.add(saveButton, deleteButton, cancelButton);
         buttonsLayout.setWidthFull();
 
         add(
@@ -62,17 +75,24 @@ public class ContactForm extends FormLayout {
         setResponsiveSteps(new ResponsiveStep("0", 1));
 
         binder.bindInstanceFields(this);
-        binder.addValueChangeListener(e -> saveButton.setEnabled(true));
+        binder.addValueChangeListener(e -> {
+            saveButton.setEnabled(true);
+            cancelButton.setEnabled(true);
+        });
+
+        this.setEnabled(false);
     }
 
     public void setContact(Contact contact) {
-        binder.setBean(contact);
+        this.contact = contact;
+        binder.readBean(contact);
+        setEnabled(true);
         saveButton.setEnabled(false);
-
+        cancelButton.setEnabled(false);
     }
 
     public interface ContactFormActionsHandler {
-        public void saveContact(Contact contact);
-        public void deleteContact(Contact contact);
+        void saveContact(Contact contact);
+        void deleteContact(Contact contact);
     }
 }
