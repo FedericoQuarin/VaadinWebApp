@@ -42,6 +42,8 @@ public class ListView extends VerticalLayout implements ContactForm.ContactFormA
     public ListView(CrmService service) {
         this.service = service;
 
+        addClassName("list-view");
+
         configureToobar();
         add(toolbar, configureContent());
 
@@ -114,6 +116,7 @@ public class ListView extends VerticalLayout implements ContactForm.ContactFormA
     }
 
     private void disableForm() {
+        removeClassName("editing");
         grid.asSingleSelect().clear();
         form.setEnabled(false);
         form.setEmptyContact();
@@ -121,12 +124,14 @@ public class ListView extends VerticalLayout implements ContactForm.ContactFormA
     }
 
     private void enableForm(Contact contact) {
+        addClassName("editing");
         form.setEnabled(true);
         form.setContact(contact);
         form.setVisible(true);
     }
 
     private void addContactForm() {
+        addClassName("editing");
         grid.asSingleSelect().clear();
         form.setEnabled(true);
         form.setEmptyContact();
@@ -168,5 +173,10 @@ public class ListView extends VerticalLayout implements ContactForm.ContactFormA
             dialog.close();
         });
         dialog.open();
+    }
+
+    @Override
+    public void cancelAction() {
+        disableForm();
     }
 }
