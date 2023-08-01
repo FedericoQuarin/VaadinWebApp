@@ -116,18 +116,21 @@ public class ListView extends VerticalLayout implements ContactForm.ContactFormA
     private void disableForm() {
         grid.asSingleSelect().clear();
         form.setEnabled(false);
-        form.setContact(new Contact());
+        form.setEmptyContact();
+        form.setVisible(false);
     }
 
     private void enableForm(Contact contact) {
         form.setEnabled(true);
         form.setContact(contact);
+        form.setVisible(true);
     }
 
     private void addContactForm() {
         grid.asSingleSelect().clear();
         form.setEnabled(true);
-        form.setContact(new Contact());
+        form.setEmptyContact();
+        form.setVisible(true);
     }
 
     @Override
