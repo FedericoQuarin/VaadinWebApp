@@ -36,20 +36,12 @@ public class ContactForm extends FormLayout {
         status.setItemLabelGenerator(Status::getName);
         company.setItemLabelGenerator(Company::getName);
 
+
         HorizontalLayout buttonsLayout = new HorizontalLayout();
 
         saveButton = new Button("Save");
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         saveButton.setEnabled(false);
-        saveButton.addClickListener(e -> {
-            try {
-                binder.writeBean(contact);
-                actionsHandler.saveContact(contact);
-                saveButton.setEnabled(false);
-            } catch (ValidationException exc) {
-                exc.printStackTrace();
-            }
-        });
 
         deleteButton = new Button("Delete");
         deleteButton.addClickListener(e -> {
@@ -61,8 +53,20 @@ public class ContactForm extends FormLayout {
         cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         cancelButton.addClickListener(e -> binder.readBean(contact));
 
+        saveButton.addClickListener(e -> {
+            try {
+                binder.writeBean(contact);
+                actionsHandler.saveContact(contact);
+                saveButton.setEnabled(false);
+                cancelButton.setEnabled(false);
+            } catch (ValidationException exc) {
+                exc.printStackTrace();
+            }
+        });
+
         buttonsLayout.add(saveButton, deleteButton, cancelButton);
         buttonsLayout.setWidthFull();
+
 
         add(
                 firstName,
@@ -79,8 +83,6 @@ public class ContactForm extends FormLayout {
             saveButton.setEnabled(true);
             cancelButton.setEnabled(true);
         });
-
-        this.setEnabled(false);
     }
 
     public void setContact(Contact contact) {

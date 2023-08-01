@@ -49,7 +49,7 @@ public class ListView extends VerticalLayout implements ContactForm.ContactFormA
 
         grid.addSelectionListener(e -> {
             if (e.isFromClient()) {
-                form.setContact(grid.asSingleSelect().getValue());
+                enableForm(grid.asSingleSelect().getValue());
             }
         });
     }
@@ -66,6 +66,9 @@ public class ListView extends VerticalLayout implements ContactForm.ContactFormA
         });
 
         Button addContactButton = new Button("Add Contact");
+        addContactButton.addClickListener(e -> {
+            addContactForm();
+        });
 
         toolbar.add(filterField, addContactButton);
     }
@@ -75,6 +78,7 @@ public class ListView extends VerticalLayout implements ContactForm.ContactFormA
 
         configureGrid();
         configureForm();
+        disableForm();
 
         layout.add(grid, form);
         layout.setFlexGrow(2, grid);
@@ -105,13 +109,33 @@ public class ListView extends VerticalLayout implements ContactForm.ContactFormA
     }
 
     private void updateList() {
-        grid.setItems(service.findAllContacts(filterField.getValue()));
+        List<Contact> contactList = service.findAllContacts(filterField.getValue());
+        grid.setItems(contactList);
+    }
+
+    private void disableForm() {
+        grid.asSingleSelect().clear();
+        form.setEnabled(false);
+        form.setContact(new Contact());
+    }
+
+    private void enableForm(Contact contact) {
+        form.setEnabled(true);
+        form.setContact(contact);
+    }
+
+    private void addContactForm() {
+        grid.asSingleSelect().clear();
+        form.setEnabled(true);
+        form.setContact(new Contact());
     }
 
     @Override
     public void saveContact(Contact contact) {
         service.saveContact(contact);
         updateList();
+        disableForm();
+
         Notification notification = Notification.show(
                 "Contact saved succesfully!",
                 5000,
@@ -128,6 +152,7 @@ public class ListView extends VerticalLayout implements ContactForm.ContactFormA
         dialog.setConfirmButton("Yes", e -> {
             service.deleteContact(contact);
             updateList();
+            disableForm();
 
             Notification notification = Notification.show(
                     "Contact deleted succesfully!",

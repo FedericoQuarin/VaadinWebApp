@@ -4,18 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Contact extends AbstractEntity {
-    @NotEmpty
+    @NotEmpty(message = "Must not be empty")
     private String firstName = "";
 
-    @NotEmpty
+    @NotEmpty(message = "Must not be empty")
     private String lastName = "";
 
     @NotNull
+    @Email(message = "Not a valid email address")
     private String email = "";
 
     @NotNull
