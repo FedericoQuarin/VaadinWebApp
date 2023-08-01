@@ -44,6 +44,7 @@ public class ContactForm extends FormLayout {
         saveButton.setEnabled(false);
 
         deleteButton = new Button("Delete");
+        deleteButton.setEnabled(false);
         deleteButton.addClickListener(e -> {
             actionsHandler.deleteContact(contact);
         });
@@ -51,13 +52,18 @@ public class ContactForm extends FormLayout {
         cancelButton = new Button("Cancel");
         cancelButton.setEnabled(false);
         cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        cancelButton.addClickListener(e -> binder.readBean(contact));
+        cancelButton.addClickListener(e -> {
+            binder.readBean(contact);
+            saveButton.setEnabled(false);
+            cancelButton.setEnabled(false);
+        });
 
         saveButton.addClickListener(e -> {
             try {
                 binder.writeBean(contact);
                 actionsHandler.saveContact(contact);
                 saveButton.setEnabled(false);
+                deleteButton.setEnabled(false);
                 cancelButton.setEnabled(false);
             } catch (ValidationException exc) {
                 exc.printStackTrace();
@@ -91,6 +97,12 @@ public class ContactForm extends FormLayout {
         setEnabled(true);
         saveButton.setEnabled(false);
         cancelButton.setEnabled(false);
+        deleteButton.setEnabled(true);
+    }
+
+    public void setEmptyContact() {
+        setContact(new Contact());
+        deleteButton.setEnabled(false);
     }
 
     public interface ContactFormActionsHandler {
