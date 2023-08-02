@@ -25,9 +25,9 @@ public class ContactForm extends FormLayout {
     ComboBox<Status> status;
     ComboBox<Company> company;
 
-    private final Button saveButton;
-    private final Button deleteButton;
-    private final Button cancelButton;
+    final Button saveButton;
+    final Button deleteButton;
+    final Button cancelButton;
 
     public ContactForm(List<Company> companies, List<Status> statuses, ContactFormActionsHandler actionsHandler) {
         status = new ComboBox<>("Status", statuses);

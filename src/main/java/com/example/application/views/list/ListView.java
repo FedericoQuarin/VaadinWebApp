@@ -16,16 +16,20 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
+import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 
+
+@org.springframework.stereotype.Component
+@Scope("prototype")
 @PageTitle("Contacts")
 @Route(value = "", layout = MainLayout.class)
 @PermitAll
 public class ListView extends VerticalLayout implements ContactForm.ContactFormActionsHandler {
     private HorizontalLayout toolbar;
-    private Grid<Contact> grid;
-    private ContactForm form;
+    Grid<Contact> grid;
+    ContactForm form;
 
     private TextField filterField;
 
@@ -42,9 +46,7 @@ public class ListView extends VerticalLayout implements ContactForm.ContactFormA
         updateList();
 
         grid.addSelectionListener(e -> {
-            if (e.isFromClient()) {
-                enableForm(grid.asSingleSelect().getValue());
-            }
+            enableForm(grid.asSingleSelect().getValue());
         });
     }
 
