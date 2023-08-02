@@ -1,7 +1,6 @@
 # Flow CRM Tutorial
 
-This project can be used as a starting point to create your own Vaadin application with Spring Boot.
-It contains all the necessary configuration and some placeholder files to get you started.
+This project is my own Vaadin application with Spring Boot, from the tutorial [Build Web Applications with Spring Boot & Vaadin](https://vaadin.com/docs/latest/tutorial/overview). It's a basic Contacts CRM with a login page created with Spring Security.
 
 ## Running the application
 
@@ -22,14 +21,6 @@ ready to be deployed. The file can be found in the `target` folder after the bui
 Once the JAR file is built, you can run it using
 `java -jar target/flowcrmtutorial-1.0-SNAPSHOT.jar`
 
-## Project structure
-
-- `MainLayout.java` in `src/main/java` contains the navigation setup (i.e., the
-  side/top bar and the main menu). This setup uses
-  [App Layout](https://vaadin.com/docs/components/app-layout).
-- `views` package in `src/main/java` contains the server-side Java views of your application.
-- `views` folder in `frontend/` contains the client-side JavaScript views of your application.
-- `themes` folder in `frontend/` contains the custom CSS styles.
 
 ## Useful links
 
